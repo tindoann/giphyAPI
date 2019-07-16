@@ -8,8 +8,9 @@ $(document).ready(function () {
 
   let renderBtn = () => {
     $('#btn-view').empty()
+
     for (let i = 0; i < topics.length; i++) {
-      let btns = `<button class='gif' data-value='${topics[i]}'>${topics[i]}</button>`;
+      let btns = `<button class='gif' data-name='${topics[i]}'>${topics[i]}</button>`;
       $('#btn-view').append(btns);
       // console.log(btns)
     }
@@ -20,7 +21,7 @@ $(document).ready(function () {
   //=== 6. Add a form to your page that takes a value from a user input box and adds it to your `topics` array. ===//
 
   let addBtn = () => {
-    $('#gifBtn').on('click', event => {
+    $('#gifBtn').on('click', function(event) {
       event.preventDefault();
       const gifs = $('#giphy-input').val().trim(); // This line will grab the text from the input box
       if (gifs == '') {
@@ -29,29 +30,29 @@ $(document).ready(function () {
       }
       topics.push(gifs);
       renderBtn();
-      $('form').trigger("reset");
+      $('form').trigger('reset');
     });
   }
 
   addBtn();
 
-
  //=== 3. When the user clicks on a button, the page should grab 10 static, non-animated gif images from the GIPHY API and place them on the page. ===///
 
   const showGifs = () => {
 
-    let request = $(this).attr('data-value');
-    let queryURL = 'https://api.giphy.com/v1/gifs/search?q=' + request + "&api_key=GOMwIk5Tv7IYqXslbh9zV20jOChqVTjs&limit=10";
+    let request = $(this).attr('data-name');
+    let queryURL = 'https://api.giphy.com/v1/gifs/search?q=' + request + '&api_key=GOMwIk5Tv7IYqXslbh9zV20jOChqVTjs&limit=10';
     console.log(queryURL);
 
     $.ajax({
-      url: queryURL,
-      method: "GET"
+        url: queryURL,
+        method: 'GET'
+
     }).then(function (response) {
       console.log(response);
 
+      const results = response.data; //grabs the data 
 
-      let results = response.data; //grabs the data 
       for (let i = 0; i < response.data.length; i++) {
         let rating = results[i].rating
 
@@ -59,17 +60,18 @@ $(document).ready(function () {
 
         let imgs = `
            <div>
-              <img src="${results[i].images.fixed_height_small_still.url}"  data-still="${results[i].images.original_still.url}" data-animate="${results[i].images.original.url}" data-state="still" class="img">
+              <img src='${results[i].images.fixed_height_small_still.url}'  data-still='${results[i].images.original_still.url}' data-animate='${results[i].images.original.url}' data-state='still' class='gif'>
               <p>Rating: ${rating}</p>
-            </div>    
-        `;
+            </div>`;
+
         $('#gif-images').prepend(imgs);
       };
 
 //=== 4. When the user clicks one of the still GIPHY images, the gif should animate/pause ===//
 
-      $('.img').on('click', function () {
+      $('.gif').on('click', function () {
         let state = $(this).attr('data-state');
+
         if (state == 'still') {
           $(this).attr('src', $(this).data('animate'));
           $(this).attr('data-state', 'animate');
@@ -80,10 +82,10 @@ $(document).ready(function () {
       });
     });
   }
+
   showGifs();
-
-  $(document).on('click', '.memes', showGifs);
-
+  $(document).on('click', '.gif', showGifs);
+  renderBtn();
 
 });
 
