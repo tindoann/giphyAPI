@@ -56,10 +56,10 @@ $(document).ready(function () {
           event.preventDefault();
           const gifs = $('#giphy-input').val().trim(); // This line will grab the text from the input box
           searchTopic = gifs;
-          // if (gifs == '') {
-          //   alert("Don't be a bore, put in a meme")
-          //   return false;
-          // }
+          if (gifs == '') {
+            alert("Don't be a bore, put in a meme")
+            return false;
+          }
           topics.push(gifs);
           renderBtn();
           $('form').trigger('reset');
