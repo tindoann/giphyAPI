@@ -1,6 +1,6 @@
 //=== 1. Create an array of strings ===// 
 
-let topics = ['Reanu Reeves', 'Pepe', 'Trump', 'Cats', 'Rainbows'];
+let topics = ['Reanu Keeves', 'Pepe', 'Trump', 'Cats', 'Rainbows'];
 // let searchTopic = 'cats';
 
 //=== 2. The topics in this array and create buttons in your HTML ===//
@@ -11,7 +11,6 @@ let renderBtn = () => {
     let btns = `<button class='gif' data-name='${topics[i]}'>${topics[i]}</button>`;
     $('#btn-view').append(btns);
 
-    // console.log(btns)
   }
 };
 renderBtn();
@@ -21,9 +20,11 @@ renderBtn();
 
 const showGifs = () => {
   $('.gif').click(function (event) {
+    $("#gif-images").empty(); // clears out the last gifs 
     event.preventDefault();
 
     let request = $(this).attr('data-name');
+    console.log(request); 
 
     let queryURL = 'https://api.giphy.com/v1/gifs/search?q=' + request + '&api_key=GOMwIk5Tv7IYqXslbh9zV20jOChqVTjs&limit=10&rating=pg-13';
     console.log(queryURL);
@@ -31,24 +32,25 @@ const showGifs = () => {
     // ajax call 
 
     $.ajax({
-      url: queryURL,
-      method: 'GET'
+        url: queryURL,
+        method: 'GET'
 
     }).then(function (response) {
       console.log(response);
 
       const results = response.data; //grabs the data 
 
-      for (let i = 0; i < response.data.length; i++) {
+      for (let i = 0; i < results.length; i++) {
         let rating = results[i].rating
 
 //=== 5. Under every gif, display its rating (PG, G, so on) ===//
 
-        let imgs = `<div> <img src='${results[i].images.fixed_height_small_still.url}'  data-still='${results[i].images.original_still.url}' data-animate='${results[i].images.original.url}' data-state='still' class='gif'>
+        let imgs = `<div> 
+                      <img src='${results[i].images.fixed_height_small_still.url}'  data-still='${results[i].images.original_still.url}' data-animate='${results[i].images.original.url}' data-state='still' class='gif'>
                       <p>Rating: ${rating}</p>
                     </div>`;
 
-        $('#gif-images').prepend(imgs);
+                      $('#gif-images').prepend(imgs);
       };
 
 //=== 4. When the user clicks one of the still GIPHY images, the gif should animate/pause ===//
@@ -81,8 +83,10 @@ let addBtn = () => {
     }
     topics.push(gifs);
     renderBtn();
-    $('form').trigger('reset');
+    $('form').trigger('reset'); // $("#giphy-input").val("");
+
     showGifs();
+
   });
 }
 
